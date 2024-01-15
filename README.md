@@ -10,7 +10,7 @@
    2.2. Preprocessing\
         2.2.1. Extract and generate image\
         2.2.2. EarlyStopping setting
-3. Models Training\
+3. Models Training & Prediction\
    3.1. Convolutional Network\
    3.2. Convolutional Network with multiple different epoch\
    3.3. Stack model with transfer learning and convolutional network\
