@@ -193,6 +193,8 @@ submission1.to_csv('submission_ep15_1.csv', index=False)
 submission1.head()
 ```
 
+## 3.2. Transfer learning Xception model
+
 ```python
 images_size = 150
 batch_size = 32
@@ -285,4 +287,92 @@ submission1 = pd.read_csv('../input/dogs-vs-cats-redux-kernels-edition/sample_su
 submission1['label'] = predictions_xcep[:,0]
 submission1.to_csv('submission_xception.csv', index=False)
 submission1.head()
+```
+
+
+## 3.3. Stack model with transfer learning and convolutional network
+
+
+```python
+from tensorflow.keras import layers, models
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import concatenate
+
+
+# Load VGG16 model
+vgg16 = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+
+# Custom CNN Model
+custom_cnn = models.Sequential([
+    layers.Conv2D(64, (3, 3), activation='relu', input_shape=(224, 224, 3)),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+    layers.BatchNormalization(),
+    layers.Dropout(0.3),
+    layers.Conv2D(128, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(128, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+    layers.BatchNormalization(),
+    layers.Dropout(0.3),
+
+
+])
+
+# Feature extraction
+# Add GlobalAveragePooling2D to both models
+vgg_output = GlobalAveragePooling2D()(vgg16.output)
+custom_cnn_output = GlobalAveragePooling2D()(custom_cnn.output)
+
+# Concatenate features
+combined = layers.concatenate([vgg_output, custom_cnn_output])
+
+
+# Additional layers
+x = layers.Flatten()(combined)
+x = layers.Dense(1024, activation='relu')(x)
+#-- output = layers.Dense(10, activation='softmax')(x)  # Adjust number of units based on your problem
+output = layers.Dense(2, activation='sigmoid')(x)
+
+
+# Combined model
+model = Model(inputs=[vgg16.input, custom_cnn.input], outputs=output)
+
+# Compile and train
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])# Fit the model
+
+
+def generate_dual_input(generator):
+    for (inputs, labels) in generator:
+        yield [inputs, inputs], labels
+
+# Create dual-input generators
+train_dual_gen = generate_dual_input(trainDatagen)
+val_dual_gen = generate_dual_input(valDatagen)
+
+
+history = model.fit(
+    train_dual_gen,
+    steps_per_epoch=len(trainDatagen),
+    validation_data=val_dual_gen,
+    validation_steps=len(valDatagen),
+    epochs=10  # Adjust as needed
+)
+
+def generate_dual_input_test(generator):
+    for inputs in generator:
+        yield [inputs, inputs]
+
+
+test_dual_gen = generate_dual_input_test(testDatagen)
+predictions_stacked = model.predict(test_dual_gen, steps=len(testDatagen), verbose=1)
+
+submission1 = pd.read_csv('../input/dogs-vs-cats-redux-kernels-edition/sample_submission.csv')
+submission1['label'] = predictions_stacked[:,0]
+submission1.to_csv('submission_stacked.csv', index=False)
+submission1.head()
+
+
 ```
