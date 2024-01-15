@@ -10,7 +10,7 @@
    2.2. Preprocessing\
         2.2.1. Extract and generate image\
         2.2.2. EarlyStopping setting
-3. Models\
+3. Models Training\
    3.1. Convolutional Network\
    3.2. Convolutional Network with multiple different epoch\
    3.3. Stack model with transfer learning and convolutional network\
@@ -83,7 +83,7 @@ import matplotlib.pyplot as plt
 
 
    ## 2.2. Preprocessing
-   ### 2.2.1. Extract and generate image\
+   ### 2.2.1. Extract and generate image
 
 ```python
 import zipfile
@@ -140,5 +140,56 @@ testDatagen = test_datagen.flow_from_dataframe(test, directory = './test', x_col
 ```
 
 
+## 3. Models Training & Prediction
+### 3.1. Convolutional Network
 
+```python
+model = models.Sequential()
+model.add(layers.Conv2D(64,(3,3),activation='relu',input_shape=(150,150,3)))
+model.add(layers.MaxPooling2D((2,2)))
+ 
+model.add(layers.Conv2D(64,(3,3),activation='relu'))
+model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.BatchNormalization())
+model.add(layers.Dropout(0.3))
+    
+model.add(layers.Conv2D(128,(3,3),activation='relu'))
+model.add(layers.MaxPooling2D((2,2)))
+ 
+model.add(layers.Conv2D(128,(3,3),activation='relu'))
+model.add(layers.MaxPooling2D((2,2)))
+model.add(layers.BatchNormalization())
+model.add(layers.Dropout(0.3))
+
+model.add(layers.Flatten())
+
+model.add(layers.Dense(256,activation='relu'))
+model.add(layers.Dense(2,activation='softmax'))
+
+model.compile(loss="categorical_crossentropy",optimizer=optimizers.Adam(learning_rate=1e-4),metrics=['acc'])
+ 
+model.summary()
+
+history = model.fit(trainDatagen, steps_per_epoch = len(trainDatagen), epochs=10, validation_data = valDatagen, validation_steps=len(valDatagen), shuffle=True)
+
+predictions = model.predict(testDatagen, batch_size=32, verbose =1)
+predictions
+
+submission = pd.read_csv('../input/dogs-vs-cats-redux-kernels-edition/sample_submission.csv')
+submission['label'] = predictions[:,0]
+submission.to_csv('submission_cnn_epoch10.csv', index=False)
+submission.head()
+```
+
+```python
+history = model.fit(trainDatagen, steps_per_epoch = len(trainDatagen), epochs=15, validation_data = valDatagen, validation_steps=len(valDatagen), shuffle=True)
+
+predictions1 = model.predict(testDatagen, batch_size=32, verbose =1)
+predictions1
+
+submission1 = pd.read_csv('../input/dogs-vs-cats-redux-kernels-edition/sample_submission.csv')
+submission1['label'] = predictions1[:,0]
+submission1.to_csv('submission_ep15_1.csv', index=False)
+submission1.head()
+```
 
