@@ -30,8 +30,8 @@ For an effective approach combining both Deep Neural Networks (DNNs) and Transfe
 Will Cukierski. (2016). Dogs vs. Cats Redux: Kernels Edition. Kaggle. https://kaggle.com/competitions/dogs-vs-cats-redux-kernels-edition
 
 
-## 2. Data processing\
-   ### 2.1. Import Libraries\
+## 2. Data processing
+   ### 2.1. Import Libraries
 
 ```python
 # This Python 3 environment comes with many helpful analytics libraries installed
