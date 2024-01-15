@@ -1,4 +1,4 @@
-# 🌟 Image Classification - Cats 😺 vs Dogs Problem 🐶 🌟
+# 🌟 Image Classification - Cats 😺 vs Dogs 🐶 Problem 🌟
 
 
 
