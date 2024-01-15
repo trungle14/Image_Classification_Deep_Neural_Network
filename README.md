@@ -1,7 +1,6 @@
 # 🌟 Image Classification - Cats 😺 vs Dogs Problem 🐶 🌟
 
 
-![GitHub stars](https://img.shields.io/github/stars/username/repository?style=social)
 
 Table of Contents
 1. Problem overview
@@ -12,6 +11,9 @@ Table of Contents
      2.2.2. EarlyStopping setting
 3. Models
    3.1. Convolutional Network
+   3.2. Convolutional Network with multiple different epoch
+   3.3. Stack model with transfer learning and convolutional network
+   3.4. Transfer learning Xception model
 6. Exponential Decay
 7. Transfer Learning
 5.1 Get the weights from DenseNet121
