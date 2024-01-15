@@ -30,6 +30,9 @@ For an effective approach combining both Deep Neural Networks (DNNs) and Transfe
 Will Cukierski. (2016). Dogs vs. Cats Redux: Kernels Edition. Kaggle. https://kaggle.com/competitions/dogs-vs-cats-redux-kernels-edition
 
 
+## 2. Data processing\
+   ### 2.1. Import Libraries\
+
 ```python
 # This Python 3 environment comes with many helpful analytics libraries installed
 # It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python
@@ -48,4 +51,15 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 
 # You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using "Save & Run All" 
 # You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session
+
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers, models, optimizers
+from keras.layers import Dense, MaxPool2D, Conv2D, Dropout, Flatten, GlobalAveragePooling2D, BatchNormalization, Activation, MaxPooling2D
+from keras.models import Sequential
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 ```
