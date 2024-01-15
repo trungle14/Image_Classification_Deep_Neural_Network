@@ -63,3 +63,60 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 ```
+
+
+
+```python
+import zipfile
+train_zip='../input/dogs-vs-cats-redux-kernels-edition/train.zip'
+zip_ref=zipfile.ZipFile(train_zip,'r').extractall('./')
+
+test_zip = '../input/dogs-vs-cats-redux-kernels-edition/test.zip'
+zip_ref=zipfile.ZipFile(test_zip,'r').extractall('./')
+
+import os
+train_filenames = os.listdir('./train')
+test_filenames = os.listdir('./test')
+
+# Create DataFrame with ImageDataGenerator
+train = pd.DataFrame(columns=['path', 'label'])
+train['path'] = train_filenames
+train['label'] = train['path'].str[0:3]
+
+train.label.value_counts().plot.bar() # Balanced Data
+
+width, height = 150, 150
+trainDatagen = train_datagen.flow_from_dataframe(train, directory = './train', x_col='path', y_col='label', classes=['cat', 'dog' ],
+                                           target_size=(width,height), class_mode = 'categorical', batch_size = 16,
+                                           subset='training')
+
+valDatagen = train_datagen.flow_from_dataframe(train, directory = './train', x_col='path', y_col='label', classes=['cat','dog'],
+                                           target_size=(width,height), class_mode = 'categorical', batch_size = 16,
+                                           subset='validation')
+
+
+x, y = trainDatagen.next()
+x.shape, y.shape
+
+plt.figure(figsize=(15,15))
+for i in range(9):
+    img, label = trainDatagen.next()
+    plt.subplot(331+i)
+    plt.imshow(img[0])
+plt.show()
+
+
+## Test data
+
+test = pd.DataFrame(columns=['path'])
+test['path'] = test_filenames
+test.head()
+
+
+test_datagen = ImageDataGenerator(rescale=1/255.0)
+width, height = 150, 150
+testDatagen = test_datagen.flow_from_dataframe(test, directory = './test', x_col='path', class_mode= None,
+                                           target_size=(width,height), batch_size = 16, shuffle=False)
+
+```
+
