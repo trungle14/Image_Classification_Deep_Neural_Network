@@ -316,10 +316,7 @@ custom_cnn = models.Sequential([
     layers.Conv2D(128, (3, 3), activation='relu'),
     layers.MaxPooling2D((2, 2)),
     layers.BatchNormalization(),
-    layers.Dropout(0.3),
-
-
-])
+    layers.Dropout(0.3),])
 
 # Feature extraction
 # Add GlobalAveragePooling2D to both models
