@@ -65,6 +65,8 @@ import matplotlib.pyplot as plt
 ```
 
 
+   ## 2.2. Preprocessing
+   ### 2.2.1. Extract and generate image\
 
 ```python
 import zipfile
@@ -119,4 +121,7 @@ testDatagen = test_datagen.flow_from_dataframe(test, directory = './test', x_col
                                            target_size=(width,height), batch_size = 16, shuffle=False)
 
 ```
+
+
+
 
