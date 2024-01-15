@@ -1,6 +1,7 @@
-# 🌟 Image Classification - Cats😺 vs Dogs Problem 🐶 🌟
+# 🌟 Image Classification - Cats 😺 vs Dogs Problem 🐶 🌟
 
 
+![GitHub stars](https://img.shields.io/github/stars/username/repository?style=social)
 
 Table of Contents
 1. Problem overview
