@@ -193,3 +193,96 @@ submission1.to_csv('submission_ep15_1.csv', index=False)
 submission1.head()
 ```
 
+```python
+images_size = 150
+batch_size = 32
+
+base_model = Xception(weights='imagenet', include_top=False, input_shape=(images_size, images_size, 3))
+for layer in base_model.layers:
+    layer.trainable = False
+
+model = models.Sequential([
+    base_model,
+    
+    layers.Flatten(),
+    
+    layers.Dense(256,activation='relu'),
+    layers.Dropout(0.5),
+    layers.Dense(2,activation='softmax'),
+])
+
+model.summary()
+
+learning_rate_schedule = keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate=0.01,  # Initial learning rate for training
+    decay_steps=1000,            # Number of steps before decaying the learning rate
+    decay_rate=0.5,              # Rate at which the learning rate decreases
+)
+optimizer = optimizers.Adam(learning_rate=learning_rate_schedule)
+model.compile(optimizer=optimizer,
+             loss="categorical_crossentropy",
+              metrics=['accuracy']
+             )
+from tensorflow.keras.callbacks import LearningRateScheduler
+early_stopping = EarlyStopping(
+    min_delta=0.001, # minimium amount of change to count as an improvement
+    patience=5, # how many epochs to wait before stopping
+    restore_best_weights=True,
+)
+learning_rate_reduce = ReduceLROnPlateau(
+    monitor='val_acc',   # Metric to monitor for changes (usually validation accuracy)
+    patience=5,          # Number of epochs with no improvement after which learning rate will be reduced
+    verbose=1,           # Verbosity mode (0: silent, 1: update messages)
+    factor=0.5,          # Factor by which the learning rate will be reduced (e.g., 0.5 means halving)
+    min_lr=0.00001       # Lower bound for the learning rate (it won't go below this value)
+)
+lr_callback = LearningRateScheduler(learning_rate_schedule)
+callback=[ lr_callback , learning_rate_reduce ,early_stopping ]
+
+
+
+
+# ExponentialDecay for the learning rate
+learning_rate_schedule = keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate=0.01,
+    decay_steps=1000,
+    decay_rate=0.5,
+)
+
+# Use this learning rate schedule in the optimizer
+optimizer = optimizers.Adam(learning_rate=learning_rate_schedule)
+
+# Compile the model
+model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=['accuracy'])
+
+# Callbacks (without LearningRateScheduler)
+callbacks = [
+    EarlyStopping(
+        min_delta=0.001,
+        patience=5,
+        restore_best_weights=True,
+    ),
+    # Optionally include ReduceLROnPlateau if you want to use it instead of ExponentialDecay
+]
+
+# Fit the model
+history = model.fit(
+    trainDatagen,
+    steps_per_epoch=trainDatagen.samples // batch_size,
+    epochs=20,
+    validation_data=valDatagen,
+    validation_steps=valDatagen.samples // batch_size,
+    callbacks=callbacks
+)
+
+
+
+predictions_xcep = model.predict(testDatagen, batch_size=32, verbose =1)
+predictions_xcep
+
+
+submission1 = pd.read_csv('../input/dogs-vs-cats-redux-kernels-edition/sample_submission.csv')
+submission1['label'] = predictions_xcep[:,0]
+submission1.to_csv('submission_xception.csv', index=False)
+submission1.head()
+```
