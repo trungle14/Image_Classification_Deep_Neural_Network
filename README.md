@@ -100,6 +100,8 @@ valDatagen = train_datagen.flow_from_dataframe(train, directory = './train', x_c
 x, y = trainDatagen.next()
 x.shape, y.shape
 
+## Display the training data
+
 plt.figure(figsize=(15,15))
 for i in range(9):
     img, label = trainDatagen.next()
@@ -107,13 +109,11 @@ for i in range(9):
     plt.imshow(img[0])
 plt.show()
 
-
 ## Test data
 
 test = pd.DataFrame(columns=['path'])
 test['path'] = test_filenames
 test.head()
-
 
 test_datagen = ImageDataGenerator(rescale=1/255.0)
 width, height = 150, 150
