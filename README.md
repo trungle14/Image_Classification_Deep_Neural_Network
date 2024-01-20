@@ -373,6 +373,40 @@ submission1 = pd.read_csv('../input/dogs-vs-cats-redux-kernels-edition/sample_su
 submission1['label'] = predictions_stacked[:,0]
 submission1.to_csv('submission_stacked.csv', index=False)
 submission1.head()
-
-
 ```
+
+
+```pytohon
+acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
+epochs = range(len(acc))
+
+plt.plot(epochs, acc, 'b', label='Training Accuracy')
+plt.plot(epochs, val_acc, 'r', label='Validation Accuracy')
+plt.title('Accuracy Graph')
+plt.legend()
+plt.figure()
+```
+<img width="333" alt="Screenshot 2024-01-20 at 15 16 45" src="https://github.com/trungle14/Image_Classification_Deep_Neural_Network/assets/143222481/826f7f67-c6af-4e2f-870c-93d78d5d3648">
+
+
+#### Since we do not have actual label of test dataset on kaggle in order to calculate performance metric like accuracy or precision. In this case, I would like to check it manually by displaying picture along with the predicted label.
+
+<img width="320" alt="Screenshot 2024-01-20 at 15 18 15" src="https://github.com/trungle14/Image_Classification_Deep_Neural_Network/assets/143222481/478ac336-409b-4d50-a13c-84da1a0ccc57">
+
+The results show that out of 21 samples out of 12500, we can get 14/21 correct at the cut-off of 80%.
+Notice that these results could be relatively sensitive with the chosen cut-off. More importantly, with the small number of sample in the test dataset we can prove that our model does a great job, although the prediction is not really high but always better than random guess.
+
+## Conclusion
+
+I already tried 4 different models and gained different results accordingly.
+
+Deep Convolutional network along with batch normalization : 2.4 Kaggle score
+Enhance Deep Convolutional network with higher epoch: 5.4 Kaggle score
+Stacked model with Transfer learning - VGG16 and Convolutional network: 1.1 Kaggle score
+Transfer learning - Xception model: 10.8 Kaggle score
+We can see that the Stacked model outperformed the others which is totally make sense when we can combine 2 different kind of models to increase the performacne, due to limitation of time, I only do the stacked model with only 2 models, if I had more time I believe stacked model among transfer learning like ResNet may be able to improve the performance
+
+
+
+
