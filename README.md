@@ -126,6 +126,9 @@ for i in range(9):
     plt.imshow(img[0])
 plt.show()
 
+<img width="663" alt="Screenshot 2024-01-20 at 00 16 42" src="https://github.com/trungle14/Image_Classification_Deep_Neural_Network/assets/143222481/ec5d5021-06a8-400e-aed5-c6cb4984827d">
+
+
 # Test data
 
 test = pd.DataFrame(columns=['path'])
